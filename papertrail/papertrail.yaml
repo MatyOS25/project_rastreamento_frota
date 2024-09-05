@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: papertrail
+spec:
+  selector:
+    matchLabels:
+      name: papertrail
+  template:
+    metadata:
+      labels:
+        name: papertrail
+    spec:
+      containers:
+      - name: papertrail
+        image: gliderlabs/logspout
+        env:
+        - name: ROUTE_URIS
+          value: syslog+tls://logs.papertrailapp.com:12345
+        volumeMounts:
+        - name: log
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: log
+        hostPath:
+          path: /var/run/docker.sock
