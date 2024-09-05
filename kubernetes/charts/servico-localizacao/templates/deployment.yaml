@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "servico-localizacao.fullname" . }}
+  labels:
+    {{- include "servico-localizacao.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "servico-localizacao.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "servico-localizacao.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: udp
+              containerPort: 9876
+              protocol: UDP
+          env:
+            - name: SPRING_APPLICATION_NAME
+              value: servico-localizacao
+            - name: SERVER_PORT
+              value: "{{ .Values.service.port }}"
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: {{ .Values.eureka.client.serviceUrl.defaultZone }}
+            - name: UDP_SERVER_PORT
+              value: "{{ .Values.service.udpPort }}"
+            - name: RABBITMQ_HOST
+              value: {{ .Values.rabbitmq.host }}
+            - name: RABBITMQ_PORT
+              value: "{{ .Values.rabbitmq.port }}"
+            - name: RABBITMQ_USERNAME
+              value: {{ .Values.rabbitmq.username }}
+            - name: RABBITMQ_PASSWORD
+              value: {{ .Values.rabbitmq.password }}
+            - name: RABBITMQ_QUEUE_NAME
+              value: {{ .Values.rabbitmq.queue.name }}
+            - name: RABBITMQ_EXCHANGE_NAME
+              value: {{ .Values.rabbitmq.exchange.name }}
+            - name: RABBITMQ_ROUTING_KEY
+              value: {{ .Values.rabbitmq.routing.key }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "servico-localizacao.fullname" . }}
+  labels:
+    {{- include "servico-localizacao.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: {{ .Values.service.udpPort }}
+      targetPort: udp
+      protocol: UDP
+      name: udp
+  selector:
+    {{- include "servico-localizacao.selectorLabels" . | nindent 4 }}

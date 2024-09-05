@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/projeto_micro_java.iml" filepath="$PROJECT_DIR$/.idea/projeto_micro_java.iml" />
-      <module fileurl="file://$PROJECT_DIR$/servico-localizacao/servico-localizacao.iml" filepath="$PROJECT_DIR$/servico-localizacao/servico-localizacao.iml" />
       <module fileurl="file://$PROJECT_DIR$/servico-notificacoes/servico-notificacoes.iml" filepath="$PROJECT_DIR$/servico-notificacoes/servico-notificacoes.iml" />
       <module fileurl="file://$PROJECT_DIR$/servico-relatorio/servico-relatorio.iml" filepath="$PROJECT_DIR$/servico-relatorio/servico-relatorio.iml" />
       <module fileurl="file://$PROJECT_DIR$/servico-localizacao/servico-relatorios/servico-relatorios.iml" filepath="$PROJECT_DIR$/servico-localizacao/servico-relatorios/servico-relatorios.iml" />
