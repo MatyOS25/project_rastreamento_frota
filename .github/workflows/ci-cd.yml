@@ -1,0 +1,25 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: 'v3.8.1'
+    
+    - name: Set up kubeconfig
+      run: |
+        echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
+        echo "KUBECONFIG=kubeconfig" >> $GITHUB_ENV
+    
+    - name: Deploy services
+      run: |
+        ./deploy-services.ps1 -Environment prod

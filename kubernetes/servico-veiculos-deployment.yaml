@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: servico-veiculos
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: servico-veiculos
+  template:
+    metadata:
+      labels:
+        app: servico-veiculos
+    spec:
+      containers:
+      - name: servico-veiculos
+        image: seu-registro/servico-veiculos:latest
+        ports:
+        - containerPort: 8081
+        env:
+        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          value: "http://eureka-server:8761/eureka/"
+        - name: SPRING_RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: ELASTICSEARCH_HOST
+          value: "elasticsearch"

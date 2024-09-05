@@ -1,0 +1,16 @@
+replicaCount: 1
+
+persistence:
+  size: 1Gi
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+rabbitmq:
+  username: devuser
+  password: devpassword  # Em um cenário real, não armazene senhas aqui

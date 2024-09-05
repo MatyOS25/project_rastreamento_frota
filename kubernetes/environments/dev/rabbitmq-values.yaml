@@ -1,0 +1,11 @@
+auth:
+  username: devuser
+persistence:
+  size: 1Gi
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 250m
+    memory: 512Mi

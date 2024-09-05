@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: servico-notificacoes
+spec:
+  selector:
+    app: servico-notificacoes
+  ports:
+    - port: 8084
+      targetPort: 8084
