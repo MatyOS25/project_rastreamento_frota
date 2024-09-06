@@ -1,4 +1,3 @@
-# Script para empacotar o projeto Maven, configurar o ambiente Docker do Minikube e criar a imagem Docker
 
 param(
     [Parameter(Mandatory=$true)]
@@ -26,12 +25,8 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-# Configurar o ambiente Docker para usar o Minikube
-Write-Host "Configurando o ambiente Docker para usar o Minikube..."
-& minikube -p minikube docker-env --shell powershell | Invoke-Expression
-
-# Construir a imagem Docker no contexto do Minikube
-Write-Host "Construindo a imagem Docker no Minikube..."
+# Construir a imagem Docker
+Write-Host "Construindo a imagem Docker..."
 docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Falha ao construir a imagem Docker"
@@ -44,4 +39,11 @@ docker images ${IMAGE_NAME}:${IMAGE_TAG}
 # Voltar para o diretório raiz do projeto
 Set-Location -Path "..\..\"
 
-Write-Host "Processo concluído. A imagem Docker '${IMAGE_NAME}:${IMAGE_TAG}' foi criada com sucesso no Minikube."
+Write-Host "Processo concluído. A imagem Docker '${IMAGE_NAME}:${IMAGE_TAG}' foi criada com sucesso."
+
+# Opcional: Fazer push da imagem para um registro Docker, se necessário
+# docker push ${IMAGE_NAME}:${IMAGE_TAG}
+
+Write-Host "Para implantar no Kubernetes do Docker Desktop, use:"
+Write-Host "kubectl apply -f seu-arquivo-de-deployment.yaml"
+Write-Host "kubectl apply -f seu-arquivo-de-service.yaml"

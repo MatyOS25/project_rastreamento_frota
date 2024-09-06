@@ -7,6 +7,9 @@ WORKDIR /app
 # Copie o arquivo JAR pré-compilado para o container
 COPY target/*.jar app.jar
 
+# Copie o arquivo logback-spring.xml para o container
+COPY src/main/resources/logback-spring.xml /app/logback-spring.xml
+
 # Exponha a porta que a aplicação usa
 EXPOSE 8080
 EXPOSE 9876/udp

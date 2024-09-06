@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    
+    <springProperty scope="context" name="appName" source="spring.application.name"/>
+    
+    <appender name="PAPERTRAIL" class="ch.qos.logback.classic.net.SyslogAppender">
+        <syslogHost>logs2.papertrailapp.com</syslogHost>
+        <port>12549</port>
+        <facility>USER</facility>
+        <suffixPattern>${appName} %logger %msg</suffixPattern>
+    </appender>
+    
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="PAPERTRAIL" />
+    </root>
+    
+    <logger name="br.edu.infnet.micro.servicolocalizacao" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="PAPERTRAIL" />
+    </logger>
+</configuration>

@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-udp-servico-localizacao
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: servico-localizacao
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - protocol: UDP
+      port: 9876

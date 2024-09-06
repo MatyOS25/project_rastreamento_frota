@@ -5,6 +5,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.context.SmartLifecycle;
@@ -12,6 +15,7 @@ import org.springframework.context.SmartLifecycle;
 @Component
 public class UdpServer implements SmartLifecycle {
 
+    public static final Logger logger = LoggerFactory.getLogger(UdpServer.class);    
     private final EventLoopGroup group = new NioEventLoopGroup();
     private final UdpServerHandler serverHandler;
     private boolean running = false;
@@ -27,12 +31,14 @@ public class UdpServer implements SmartLifecycle {
     public void start() {
         try {
             Bootstrap b = new Bootstrap();
+            logger.info("Iniciando servidor UDP na porta: {}", port);
             b.group(group)
              .channel(NioDatagramChannel.class)
              .option(ChannelOption.SO_BROADCAST, true)
              .handler(serverHandler);
 
             b.bind(port).sync();
+            logger.info("Servidor UDP iniciado com sucesso");
             running = true;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
