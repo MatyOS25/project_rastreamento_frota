@@ -1,10 +1,17 @@
 # Arquivo: TestUDP-servico-localizacao.ps1
 
-# Usar a URL fornecida pelo Minikube
-$minikubeUrl = "127.0.0.1"
-$udpPort = 57046  # Use a segunda porta fornecida pelo comando minikube service
+# Função para obter a porta UDP do serviço
+function Get-UDPPort {
+    $service = kubectl get service servico-localizacao -o json | ConvertFrom-Json
+    $nodePort = ($service.spec.ports | Where-Object { $_.protocol -eq 'UDP' }).nodePort
+    return $nodePort
+}
 
-Write-Host "IP para teste: $minikubeUrl"
+# Obter informações do serviço
+$udpIp = "127.0.0.1"
+$udpPort = Get-UDPPort
+
+Write-Host "IP para teste: $udpIp"
 Write-Host "Porta UDP: $udpPort"
 
 # Exibir informações completas do serviço
@@ -14,12 +21,12 @@ kubectl get service servico-localizacao -o wide
 # Enviar mensagem UDP
 $message = "Teste de mensagem UDP via Kubernetes"
 try {
-    $endpoint = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Parse($minikubeUrl), $udpPort)
+    $endpoint = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Parse($udpIp), $udpPort)
     $udpclient = New-Object System.Net.Sockets.UdpClient
     $bytes = [System.Text.Encoding]::ASCII.GetBytes($message)
     $udpclient.Send($bytes, $bytes.Length, $endpoint)
     $udpclient.Close()
-    Write-Host "`nMensagem UDP enviada para ${minikubeUrl}:$udpPort"
+    Write-Host "`nMensagem UDP enviada para ${udpIp}:$udpPort"
 } catch {
     Write-Host "Erro ao enviar mensagem UDP: $_"
 }

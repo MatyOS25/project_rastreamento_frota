@@ -5,15 +5,21 @@ metadata:
   labels:
     {{- include "servico-localizacao.labels" . | nindent 4 }}
 spec:
-  type: NodePort
+  type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ .Values.service.httpPort }}
       targetPort: http
       protocol: TCP
       name: http
+      {{- if .Values.service.nodePort.http }}
+      nodePort: {{ .Values.service.nodePort.http }}
+      {{- end }}
     - port: {{ .Values.service.udpPort }}
       targetPort: udp
       protocol: UDP
       name: udp
+      {{- if .Values.service.nodePort.udp }}
+      nodePort: {{ .Values.service.nodePort.udp }}
+      {{- end }}
   selector:
     {{- include "servico-localizacao.selectorLabels" . | nindent 4 }}

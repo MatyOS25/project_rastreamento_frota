@@ -16,37 +16,18 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: {{ .Values.service.httpPort }}
               protocol: TCP
             - name: udp
-              containerPort: 9876
+              containerPort: {{ .Values.service.udpPort }}
               protocol: UDP
-          env:
-            - name: SPRING_APPLICATION_NAME
-              value: servico-localizacao
-            - name: SERVER_PORT
-              value: "{{ .Values.service.port }}"
-            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-              value: {{ .Values.eureka.client.serviceUrl.defaultZone }}
-            - name: UDP_SERVER_PORT
-              value: "{{ .Values.service.udpPort }}"
-            - name: RABBITMQ_HOST
-              value: {{ .Values.rabbitmq.host }}
-            - name: RABBITMQ_PORT
-              value: "{{ .Values.rabbitmq.port }}"
-            - name: RABBITMQ_USERNAME
-              value: {{ .Values.rabbitmq.username }}
-            - name: RABBITMQ_PASSWORD
-              value: {{ .Values.rabbitmq.password }}
-            - name: RABBITMQ_QUEUE_NAME
-              value: {{ .Values.rabbitmq.queue.name }}
-            - name: RABBITMQ_EXCHANGE_NAME
-              value: {{ .Values.rabbitmq.exchange.name }}
-            - name: RABBITMQ_ROUTING_KEY
-              value: {{ .Values.rabbitmq.routing.key }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}

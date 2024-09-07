@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: eureka-server
   tag: latest
-  pullPolicy: Never
+  pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""

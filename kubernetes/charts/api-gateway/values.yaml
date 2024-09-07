@@ -10,8 +10,8 @@ image:
   tag: "latest"
 
 service:
-  type: ClusterIP
-  port: 8080
+  type: LoadBalancer
+  port: 80
 
 eureka:
   client:

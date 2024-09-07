@@ -40,8 +40,11 @@ securityContext: {}
 
 service:
   type: NodePort
-  port: 8080
+  httpPort: 8080
   udpPort: 9876
+  nodePort:
+    http: 30080  # Opcional: você pode definir uma porta específica ou deixar o Kubernetes atribuir automaticamente
+    udp: 30876   # Opcional: você pode definir uma porta específica ou deixar o Kubernetes atribuir automaticamente
 
 ingress:
   enabled: false
@@ -90,7 +93,6 @@ rabbitmq:
 
 # Configurações opcionais do Eureka
 eureka:
-  enabled: false
   client:
     serviceUrl:
       defaultZone: http://eureka-server:8761/eureka/

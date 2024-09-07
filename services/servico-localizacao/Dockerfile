@@ -14,8 +14,6 @@ COPY src/main/resources/logback-spring.xml /app/logback-spring.xml
 EXPOSE 8080
 EXPOSE 9876/udp
 
-# Defina variáveis de ambiente (opcional, pode ser sobrescrito no Kubernetes)
-ENV SPRING_PROFILES_ACTIVE=prod
 
 # Comando para executar a aplicação
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
