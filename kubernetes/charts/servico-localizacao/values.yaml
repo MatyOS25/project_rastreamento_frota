@@ -43,8 +43,8 @@ service:
   httpPort: 8080
   udpPort: 9876
   nodePort:
-    http: 30080  # Opcional: você pode definir uma porta específica ou deixar o Kubernetes atribuir automaticamente
-    udp: 30876   # Opcional: você pode definir uma porta específica ou deixar o Kubernetes atribuir automaticamente
+    http: 30080  
+    udp: 30876   
 
 ingress:
   enabled: false
