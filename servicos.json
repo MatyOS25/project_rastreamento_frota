@@ -1,0 +1,20 @@
+[
+  {
+    "Nome": "eureka-server",
+    "Chart": "./kubernetes/charts/eureka-server"
+  },
+  
+  {
+    "Nome": "api-gateway",
+    "Chart": "./kubernetes/charts/api-gateway"
+  },
+  {
+    "Nome": "rabbitmq",
+    "Chart": "bitnami/rabbitmq",
+    "Versao": "11.9.0"
+  },
+  {
+    "Nome": "servico-localizacao",
+    "Chart": "./kubernetes/charts/servico-localizacao"
+  }
+]
