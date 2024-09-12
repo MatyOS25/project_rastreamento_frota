@@ -37,7 +37,3 @@ Write-Host "Processo concluído. A imagem Docker '${IMAGE_NAME}:${IMAGE_TAG}' fo
 
 # Opcional: Fazer push da imagem para um registro Docker, se necessário
 # docker push ${IMAGE_NAME}:${IMAGE_TAG}
-
-Write-Host "Para implantar no Kubernetes do Docker Desktop, use:"
-Write-Host "kubectl apply -f seu-arquivo-de-deployment.yaml"
-Write-Host "kubectl apply -f seu-arquivo-de-service.yaml"

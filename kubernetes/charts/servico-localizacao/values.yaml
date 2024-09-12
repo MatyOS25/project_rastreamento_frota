@@ -79,17 +79,16 @@ autoscaling:
 
 # Configurações opcionais do RabbitMQ
 rabbitmq:
-  enabled: false
-  host: rabbitmq-service
+  host: "rabbitmq"
   port: 5672
-  username: guest
-  password: guest
+  username: "admin"
+  password: "adminpassword"
   queue:
-    name: location-queue
+    name: "location-queue"
   exchange:
-    name: location-exchange
+    name: "location-exchange"
   routing:
-    key: location.data
+    key: "location.data"
 
 # Configurações opcionais do Eureka
 eureka:

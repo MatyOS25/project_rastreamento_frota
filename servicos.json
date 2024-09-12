@@ -11,7 +11,9 @@
   {
     "Nome": "rabbitmq",
     "Chart": "bitnami/rabbitmq",
-    "Versao": "11.9.0"
+    "Versao": "11.9.0",
+    "ValoresPersonalizados": "./kubernetes/charts/rabbitmq/values.yaml",
+    "ConfigMap": "./kubernetes/charts/rabbitmq/configmap.yaml"
   },
   {
     "Nome": "servico-localizacao",

@@ -1,9 +1,25 @@
+service:
+  type: NodePort
+
+management:
+  service:
+    type: NodePort
+
 auth:
-  username: myuser
-  # Não coloque senhas aqui, use secrets do Kubernetes
+  enabled: true
+  username: "admin"
+  password: "adminpassword"  
+  erlangCookie: "CHANGE_ME"  
+
+plugins:
+  - rabbitmq_auth_mechanism_ssl
+  - rabbitmq_auth_backend_ldap
+  - rabbitmq_management
+
 persistence:
   enabled: true
-  size: 8Gi
+  size: 1Gi
+
 resources:
   requests:
     cpu: 250m
@@ -11,3 +27,26 @@ resources:
   limits:
     cpu: 500m
     memory: 1Gi
+
+extraConfiguration: |
+  auth_mechanisms.1 = PLAIN
+  auth_mechanisms.2 = AMQPLAIN
+  listeners.tcp.default = 5672
+  loopback_users = none
+
+extraVolumeMounts:
+  - name: definitions
+    mountPath: /app/custom_definitions.json
+    subPath: custom_definitions.json
+
+extraVolumes:
+  - name: definitions
+    configMap:
+      name: rabbitmq-definitions
+
+permissions:
+  - user: admin
+    vhost: /
+    read: ".*"
+    write: ".*"
+    configure: ".*"
