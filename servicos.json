@@ -9,6 +9,13 @@
     "Chart": "./kubernetes/charts/api-gateway"
   },
   {
+    "Nome": "mongodb",
+    "Chart": "bitnami/mongodb",
+    "Versao": "13.6.0",
+    "ValoresPersonalizados": "./kubernetes/charts/mongodb/values.yaml",
+    "ConfigMap": "./kubernetes/charts/mongodb/configmap.yaml"
+  },
+  {
     "Nome": "rabbitmq",
     "Chart": "bitnami/rabbitmq",
     "Versao": "11.9.0",
@@ -19,4 +26,5 @@
     "Nome": "servico-localizacao",
     "Chart": "./kubernetes/charts/servico-localizacao"
   }
+  
 ]

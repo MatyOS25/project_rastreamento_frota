@@ -1,20 +1,15 @@
-service:
-  type: NodePort
-
-management:
-  service:
-    type: NodePort
+fullnameOverride: "rabbitmq"
 
 auth:
-  enabled: true
   username: "admin"
-  password: "adminpassword"  
-  erlangCookie: "CHANGE_ME"  
+  password: "adminnew123"
+  erlangCookie: "SWQOKODSQALRPCLNMEQG"
 
-plugins:
-  - rabbitmq_auth_mechanism_ssl
-  - rabbitmq_auth_backend_ldap
-  - rabbitmq_management
+service:
+  type: NodePort
+  nodePorts:
+    amqp: ""
+    manager: "32747"
 
 persistence:
   enabled: true
@@ -28,25 +23,16 @@ resources:
     cpu: 500m
     memory: 1Gi
 
+extraPlugins: "rabbitmq_management,rabbitmq_prometheus"
+
+management:
+  enabled: true
+
+metrics:
+  enabled: true
+
+tls:
+  enabled: false
+
 extraConfiguration: |
-  auth_mechanisms.1 = PLAIN
-  auth_mechanisms.2 = AMQPLAIN
-  listeners.tcp.default = 5672
-  loopback_users = none
-
-extraVolumeMounts:
-  - name: definitions
-    mountPath: /app/custom_definitions.json
-    subPath: custom_definitions.json
-
-extraVolumes:
-  - name: definitions
-    configMap:
-      name: rabbitmq-definitions
-
-permissions:
-  - user: admin
-    vhost: /
-    read: ".*"
-    write: ".*"
-    configure: ".*"
+  management.tcp.port = 15672

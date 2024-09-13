@@ -6,6 +6,8 @@
     <file url="file://$PROJECT_DIR$/eureka/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/api-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/eureka-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/services/servico-consumidor-para-caminhao/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/services/servico-gerenciador-consumidor/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/services/servico-localizacao/src/main/java" charset="UTF-8" />
   </component>
 </project>

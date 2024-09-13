@@ -7,8 +7,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
-        <module name="eureka-server" />
+        <module name="servico-consumidor-para-caminhao" />
+        <module name="servico-gerenciador-consumidor" />
         <module name="servico-localizacao" />
+        <module name="eureka-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +22,8 @@
       <module name="api-gateway" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
+      <module name="servico-consumidor-para-caminhao" options="-parameters" />
+      <module name="servico-gerenciador-consumidor" options="-parameters" />
       <module name="servico-localizacao" options="-parameters" />
     </option>
   </component>

@@ -1,0 +1,26 @@
+architecture: standalone
+
+auth:
+  rootPassword: "root"
+  username: "admin"
+  password: "adminnew123"
+  database: "database"
+
+persistence:
+  enabled: true
+  size: 8Gi
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+service:
+  type: ClusterIP
+  port: 27017
+
+metrics:
+  enabled: true

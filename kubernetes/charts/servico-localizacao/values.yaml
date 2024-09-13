@@ -82,7 +82,7 @@ rabbitmq:
   host: "rabbitmq"
   port: 5672
   username: "admin"
-  password: "adminpassword"
+  password: "adminnew123"
   queue:
     name: "location-queue"
   exchange:
