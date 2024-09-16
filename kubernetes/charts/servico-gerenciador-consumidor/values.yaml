@@ -1,0 +1,97 @@
+replicaCount: 1
+
+image:
+  repository: servico-gerenciador-consumidor
+  tag: latest
+  pullPolicy: Never
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: "servico-gerenciador-consumidor"
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 8081
+  nodePort: 30100
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+# Configurações do RabbitMQ
+rabbitmq:
+  host: "rabbitmq"
+  port: 5672
+  username: "admin"
+  password: "adminnew123"
+  queue:
+    name: "consumer-manager-queue"
+  exchange:
+    name: "consumer-manager-exchange"
+  routing:
+    key: "consumer.management"
+
+# Configurações do MongoDB
+mongodb:
+  host: "mongodb"
+  port: "27017"
+  database: "gerenciador_consumidores"
+  username: "admin"
+  password: "adminnew123"
+
+# Configurações do Eureka
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+
+# Variáveis de ambiente para o container
+
+volumes: []
+volumeMounts: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Configurações de RBAC
+rbac:
+  create: true
+
+# Configurações de ambiente
+env:
+  SPRING_PROFILES_ACTIVE: "kubernetes"

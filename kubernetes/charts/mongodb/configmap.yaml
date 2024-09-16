@@ -4,12 +4,14 @@ metadata:
   name: mongodb-config
 data:
   mongo-init.js: |
+    db = db.getSiblingDB('admin')
     db.createUser(
       {
         user: "admin",
         pwd: "adminnew123",
-        roles: [ { role: "readWrite", db: "database" } ]
+        roles: [ { role: "root", db: "admin" } ]
       }
     )
+    db = db.getSiblingDB('database')
     db.createCollection("caminhoes")
     db.caminhoes.createIndex({ "placa": 1 }, { unique: true })

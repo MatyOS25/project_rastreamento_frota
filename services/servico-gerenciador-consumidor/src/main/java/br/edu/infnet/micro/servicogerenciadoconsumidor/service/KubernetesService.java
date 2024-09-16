@@ -44,11 +44,19 @@ public class KubernetesService {
     }
 
     private void criarPod(String podName, Caminhao caminhao) {
+        logger.info("Criando pod para o caminhão com MAC Address: {}", caminhao.getMacAddress());
+        
+        // Sanitize o nome do pod
+        String sanitizedPodName = sanitizeName(podName);
+        
+        // Sanitize o MAC address para uso como label
+        String sanitizedMacAddress = sanitizeName(caminhao.getMacAddress());
+        
         V1Pod pod = new V1PodBuilder()
                 .withNewMetadata()
-                    .withName(podName)
+                    .withName(sanitizedPodName)
                     .addToLabels("app", "consumidor-caminhao")
-                    .addToLabels("mac-address", caminhao.getMacAddress())
+                    .addToLabels("mac-address", sanitizedMacAddress)
                 .endMetadata()
                 .withNewSpec()
                     .addNewContainer()
@@ -67,8 +75,15 @@ public class KubernetesService {
             coreV1Api.createNamespacedPod(namespace, pod, null, null, null, null);
             logger.info("Pod criado para o caminhão com MAC Address: {}", caminhao.getMacAddress());
         } catch (ApiException e) {
-            logger.error("Erro ao criar pod", e);
+            logger.error("Erro ao criar pod: Código de status: {}, Corpo da resposta: {}", e.getCode(), e.getResponseBody(), e);
         }
+    }
+
+    private String sanitizeName(String name) {
+        return name.toLowerCase()
+                   .replaceAll("[^a-z0-9-.]", "-")
+                   .replaceAll("^[^a-z0-9]+", "")
+                   .replaceAll("[^a-z0-9]+$", "");
     }
 
     private void atualizarPod(V1Pod existingPod, Caminhao caminhao) {
@@ -95,7 +110,7 @@ public class KubernetesService {
     }
 
     public void removerPodParaCaminhao(String macAddress) {
-        String podName = "consumidor-" + macAddress.replace(":", "-");
+        String podName = "consumidor-" + sanitizeName(macAddress);
         try {
             coreV1Api.deleteNamespacedPod(podName, namespace, null, null, null, null, null, null);
             logger.info("Pod removido para o caminhão com MAC Address: {}", macAddress);

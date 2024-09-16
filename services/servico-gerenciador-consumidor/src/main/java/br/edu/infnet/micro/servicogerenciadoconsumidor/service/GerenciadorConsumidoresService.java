@@ -87,4 +87,7 @@ public class GerenciadorConsumidoresService {
         logger.info("Buscando caminhão com ID: {}", id);
         return caminhaoRepository.findById(id);
     }
+
+    //populate
+    
 }

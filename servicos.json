@@ -25,6 +25,10 @@
   {
     "Nome": "servico-localizacao",
     "Chart": "./kubernetes/charts/servico-localizacao"
-  }
+  },
+  {
+    "Nome": "servico-gerenciador-consumidor",
+    "Chart": "./kubernetes/charts/servico-gerenciador-consumidor"
+  }  
   
 ]

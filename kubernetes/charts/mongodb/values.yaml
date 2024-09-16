@@ -1,6 +1,7 @@
 architecture: standalone
 
 auth:
+  enabled: true
   rootPassword: "root"
   username: "admin"
   password: "adminnew123"
@@ -9,18 +10,64 @@ auth:
 persistence:
   enabled: true
   size: 8Gi
+  accessMode: ReadWriteOnce
 
 resources:
   limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
     cpu: 500m
     memory: 512Mi
-  requests:
-    cpu: 250m
-    memory: 256Mi
 
 service:
   type: ClusterIP
   port: 27017
 
 metrics:
+  enabled: false
+
+livenessProbe:
   enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+security:
+  authorization: enabled
+  javascriptEnabled: false
+
+extraFlags:
+  - "--logpath=/dev/stdout"
+  - "--logappend"
+  - "--verbose"
+  - "--auth"
+
+extraEnvVars:
+  - name: MONGODB_ENABLE_JOURNAL
+    value: "true"
+  - name: MONGODB_SYSTEM_LOG_VERBOSITY
+    value: "2"
+  - name: MONGODB_NET_MAX_INCOMING_CONNECTIONS
+    value: "10000"
+  - name: MONGODB_NET_KEEP_ALIVE_TIME_MS
+    value: "120000"
+
+extraVolumes:
+  - name: init-script
+    configMap:
+      name: mongodb-config
+
+extraVolumeMounts:
+  - name: init-script
+    mountPath: /docker-entrypoint-initdb.d
