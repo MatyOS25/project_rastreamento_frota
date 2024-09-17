@@ -16,22 +16,19 @@ public class MensagemConsumidor {
 	@Autowired
 	private RabbitMQPublisher rabbitMQPublisher;
 
-	@Autowired
-	private FilaManager filaManager;
-
-	@Value("${caminhao.mac-address:00:00:00:00:00:00}")
+	@Value("${caminhao.mac-address}")
 	private String macAddress;
 
-	@Value("${caminhao.placa:ABC1234}")
+	@Value("${caminhao.placa}")
 	private String placa;
 
-	@Value("${caminhao.ativo:true}")
+	@Value("${caminhao.ativo}")
 	private boolean ativo;
 
-	@Value("${caminhao.motorista:Motorista Padrão}")
+	@Value("${caminhao.motorista}")
 	private String motorista;
 
-	@Value("${caminhao.carreta:Carreta Padrão}")
+	@Value("${caminhao.carreta}")
 	private String carreta;
 
 	private Caminhao caminhao;
@@ -39,17 +36,17 @@ public class MensagemConsumidor {
 	@PostConstruct
 	public void init() {
 		caminhao = new Caminhao(null, macAddress, placa, ativo, motorista, carreta);
-		filaManager.criarOuAtualizarFila(caminhao);
 	}
 
-	@RabbitListener(queues = "${rabbitmq.queue.name}")
+	@RabbitListener(queues = "#{inputQueueName}")
 	public void receberMensagem(Message message) {
 		String mensagem = new String(message.getBody());
-		System.out.println("Mensagem recebida para o caminhão com placa " + placa + ": " + mensagem);
+		System.out.println("Mensagem recebida para o caminhão com MAC " + macAddress + ": " + mensagem);
 		
 		// Processar a mensagem (você pode adicionar lógica adicional aqui)
 		
-		// Publicar a mensagem processada no tópico específico do caminhão
+		// Publicar a mensagem processada na fila de saída (baseada na placa)
 		rabbitMQPublisher.publicarMensagem(caminhao, "Mensagem processada: " + mensagem);
+		System.out.println("Mensagem processada enviada para a fila " + placa);
 	}
 }

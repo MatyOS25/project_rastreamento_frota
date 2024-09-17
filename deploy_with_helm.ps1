@@ -68,6 +68,8 @@ foreach ($servico in $servicos) {
     Install-OrUpgradeService -nome $servico.Nome -chart $servico.Chart -versao $servico.Versao -valoresPersonalizados $servico.ValoresPersonalizados -configMap $servico.ConfigMap
 }
 
+.\need_to_run.ps1
+
 # Verificar o status dos pods
 Write-Host "`nVerificando o status dos pods:" -ForegroundColor Cyan
 kubectl get pods

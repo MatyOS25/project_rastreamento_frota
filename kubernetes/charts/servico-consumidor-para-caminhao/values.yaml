@@ -1,9 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: seu-repositorio/servico-consumidor-para-caminhao
-  pullPolicy: IfNotPresent
-  tag: "latest"
+  repository: servico-consumidor-para-caminhao
+  tag: latest
+  pullPolicy: Never
 
 service:
   type: ClusterIP

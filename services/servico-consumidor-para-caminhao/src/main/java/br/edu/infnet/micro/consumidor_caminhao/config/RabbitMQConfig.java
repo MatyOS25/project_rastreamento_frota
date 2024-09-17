@@ -11,12 +11,30 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    @Value("${rabbitmq.queue.name:caminhao.queue}")
-    private String queueName;
+    @Value("${caminhao.mac-address}")
+    private String macAddress;
+
+    @Value("${caminhao.placa}")
+    private String placa;
 
     @Bean
-    public Queue queue() {
-        return new Queue(queueName, true);
+    public String inputQueueName() {
+        return "queue." + macAddress;
+    }
+
+    @Bean
+    public String outputQueueName() {
+        return placa;
+    }
+
+    @Bean
+    public Queue inputQueue() {
+        return new Queue(inputQueueName(), false);
+    }
+
+    @Bean
+    public Queue outputQueue() {
+        return new Queue(outputQueueName(), true);
     }
 
     @Bean

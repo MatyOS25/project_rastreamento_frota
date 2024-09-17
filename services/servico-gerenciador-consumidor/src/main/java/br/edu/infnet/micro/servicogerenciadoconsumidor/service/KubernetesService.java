@@ -25,6 +25,18 @@ public class KubernetesService {
     @Value("${kubernetes.consumer.image}")
     private String consumerImage;
 
+    @Value("${spring.rabbitmq.host}")
+    private String rabbitmqHost;
+
+    @Value("${spring.rabbitmq.port}")
+    private String rabbitmqPort;
+
+    @Value("${spring.rabbitmq.username}")
+    private String rabbitmqUsername;
+
+    @Value("${spring.rabbitmq.password}")
+    private String rabbitmqPassword;
+
     public void criarOuAtualizarPodParaCaminhao(Caminhao caminhao) {
         String podName = "consumidor-" + caminhao.getMacAddress().replace(":", "-");
         try {
@@ -46,10 +58,7 @@ public class KubernetesService {
     private void criarPod(String podName, Caminhao caminhao) {
         logger.info("Criando pod para o caminhão com MAC Address: {}", caminhao.getMacAddress());
         
-        // Sanitize o nome do pod
         String sanitizedPodName = sanitizeName(podName);
-        
-        // Sanitize o MAC address para uso como label
         String sanitizedMacAddress = sanitizeName(caminhao.getMacAddress());
         
         V1Pod pod = new V1PodBuilder()
@@ -62,11 +71,16 @@ public class KubernetesService {
                     .addNewContainer()
                         .withName("consumidor")
                         .withImage(consumerImage)
+                        .withImagePullPolicy("Never")
                         .addNewEnv().withName("MAC_ADDRESS").withValue(caminhao.getMacAddress()).endEnv()
                         .addNewEnv().withName("PLACA").withValue(caminhao.getPlaca()).endEnv()
                         .addNewEnv().withName("ATIVO").withValue(String.valueOf(caminhao.isAtivo())).endEnv()
                         .addNewEnv().withName("MOTORISTA").withValue(caminhao.getMotorista()).endEnv()
                         .addNewEnv().withName("CARRETA").withValue(caminhao.getCarreta()).endEnv()
+                        .addNewEnv().withName("RABBITMQ_HOST").withValue(rabbitmqHost).endEnv()
+                        .addNewEnv().withName("RABBITMQ_PORT").withValue(rabbitmqPort).endEnv()
+                        .addNewEnv().withName("RABBITMQ_USERNAME").withValue(rabbitmqUsername).endEnv()
+                        .addNewEnv().withName("RABBITMQ_PASSWORD").withValue(rabbitmqPassword).endEnv()
                     .endContainer()
                 .endSpec()
                 .build();
@@ -98,6 +112,10 @@ public class KubernetesService {
                             .addNewEnv().withName("ATIVO").withValue(String.valueOf(caminhao.isAtivo())).endEnv()
                             .addNewEnv().withName("MOTORISTA").withValue(caminhao.getMotorista()).endEnv()
                             .addNewEnv().withName("CARRETA").withValue(caminhao.getCarreta()).endEnv()
+                            .addNewEnv().withName("RABBITMQ_HOST").withValue(rabbitmqHost).endEnv()
+                            .addNewEnv().withName("RABBITMQ_PORT").withValue(rabbitmqPort).endEnv()
+                            .addNewEnv().withName("RABBITMQ_USERNAME").withValue(rabbitmqUsername).endEnv()
+                            .addNewEnv().withName("RABBITMQ_PASSWORD").withValue(rabbitmqPassword).endEnv()
                     .endContainer()
                 .endSpec()
                 .build();

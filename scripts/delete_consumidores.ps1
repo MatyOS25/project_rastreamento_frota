@@ -1,0 +1,1 @@
+kubectl delete pods $(kubectl get pods -o name | Select-String -Pattern "^pod/consumidor" | ForEach-Object { $_.ToString().Split('/')[-1] })

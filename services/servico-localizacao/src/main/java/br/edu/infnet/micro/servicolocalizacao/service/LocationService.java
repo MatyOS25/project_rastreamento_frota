@@ -4,9 +4,14 @@ import br.edu.infnet.micro.servicolocalizacao.model.Rastreio;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class LocationService {
@@ -14,16 +19,17 @@ public class LocationService {
     private static final Logger logger = LoggerFactory.getLogger(LocationService.class);
 
     private final RabbitTemplate rabbitTemplate;
+    private final RabbitAdmin rabbitAdmin;
     private final ObjectMapper objectMapper;
 
     @Value("${rabbitmq.exchange.name}")
     private String exchangeName;
 
-    @Value("${rabbitmq.routing.key}")
-    private String routingKey;
+    private final Map<String, String> macToQueueMap = new HashMap<>();
 
-    public LocationService(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
+    public LocationService(RabbitTemplate rabbitTemplate, RabbitAdmin rabbitAdmin, ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
+        this.rabbitAdmin = rabbitAdmin;
         this.objectMapper = objectMapper;
     }
 
@@ -31,11 +37,27 @@ public class LocationService {
         try {
             Rastreio rastreio = parseRastreio(data);
             String jsonRastreio = objectMapper.writeValueAsString(rastreio);
-            sendToRabbitMQ(jsonRastreio);
-            logger.info("Rastreio processado e enviado para a fila: {}", rastreio.getMacAddress());
+            String queueName = getOrCreateQueue(rastreio.getMacAddress());
+            sendToRabbitMQ(jsonRastreio, queueName);
+            logger.info("Rastreio processado e enviado para a fila: {}", queueName);
         } catch (Exception e) {
             logger.error("Erro ao processar dados de rastreio", e);
         }
+    }
+
+    private String getOrCreateQueue(String macAddress) {
+        return macToQueueMap.computeIfAbsent(macAddress, this::createQueue);
+    }
+
+    private String createQueue(String macAddress) {
+        String queueName = "queue." + macAddress;
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put("x-expires", 300000); // 5 minutos em milissegundos
+        arguments.put("x-message-ttl", 300000); // 5 minutos em milissegundos
+        Queue queue = new Queue(queueName, true, false, false, arguments);
+        rabbitAdmin.declareQueue(queue);
+        logger.info("Fila criada para o MAC address: {} com expiração e TTL de 5 minutos", macAddress);
+        return queueName;
     }
 
     private Rastreio parseRastreio(String data) {
@@ -56,10 +78,10 @@ public class LocationService {
         }
     }
 
-    private void sendToRabbitMQ(String message) {
+    private void sendToRabbitMQ(String message, String queueName) {
         try {
-            rabbitTemplate.convertAndSend(exchangeName, routingKey, message);
-            logger.info("Mensagem enviada para RabbitMQ: {}", message);
+            rabbitTemplate.convertAndSend(queueName, message);
+            logger.info("Mensagem enviada para a fila: {}", queueName);
         } catch (Exception e) {
             logger.error("Erro ao enviar mensagem para RabbitMQ", e);
         }
