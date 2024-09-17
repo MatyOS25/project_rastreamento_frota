@@ -24,6 +24,12 @@ public class GatewayConfig {
             .route("localizacao-service", r -> r
                 .path("/localizacao/**")
                 .uri("lb://servico-localizacao"))
+            .route("consumidor-service", r -> r
+                .path("/consumidores/**")
+                .uri("lb://consumidor-caminhao"))
+            .route("gerenciador-consumidor-service", r -> r
+                .path("/gerenciador-consumidores/**")
+                .uri("lb://servico-gerenciador-consumidor"))
             .build();
     }
 
