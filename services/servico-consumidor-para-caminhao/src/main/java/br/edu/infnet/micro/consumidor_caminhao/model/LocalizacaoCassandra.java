@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -24,12 +25,16 @@ public class LocalizacaoCassandra {
     @PrimaryKeyColumn(name = "timestamp", ordinal = 1, type = PrimaryKeyType.CLUSTERED)
     private Instant timestamp;
 
+    @Column("mac_address")
     private String macAddress;
+
     private double latitude;
     private double longitude;
     private double altitude;
     private double velocidade;
     private String direcao;
+
+    @Column("status_veiculo")
     private String statusVeiculo;
 }
 
