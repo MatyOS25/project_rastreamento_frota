@@ -23,7 +23,7 @@ public class GatewayConfig {
                 .uri("lb://veiculo-service"))
             .route("localizacao-service", r -> r
                 .path("/localizacao/**")
-                .uri("lb://localizacao-service"))
+                .uri("lb://servico-localizacao"))
             .build();
     }
 
