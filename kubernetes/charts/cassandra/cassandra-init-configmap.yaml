@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cassandra-init-scripts
+data:
+  init.cql: |
+    CREATE KEYSPACE IF NOT EXISTS caminhao_keyspace
+    WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
+
+    USE caminhao_keyspace;
+
+    CREATE TABLE IF NOT EXISTS mensagens_caminhao (
+      mac_address text,
+      placa text,
+      mensagem text,
+      timestamp timestamp,
+      PRIMARY KEY ((mac_address, placa), timestamp)
+    ) WITH CLUSTERING ORDER BY (timestamp DESC);

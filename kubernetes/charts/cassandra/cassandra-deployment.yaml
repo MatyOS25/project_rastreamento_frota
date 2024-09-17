@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cassandra
+  template:
+    metadata:
+      labels:
+        app: cassandra
+    spec:
+      containers:
+      - name: cassandra
+        image: cassandra:latest
+        ports:
+        - containerPort: 9042
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+          requests:
+            cpu: "1"
+            memory: 2Gi
+        env:
+        - name: MAX_HEAP_SIZE
+          value: "2G"
+        - name: HEAP_NEWSIZE
+          value: "512M"
+        - name: CASSANDRA_CLUSTER_NAME
+          value: "MyCassandraCluster"
+        volumeMounts:
+        - name: cassandra-data
+          mountPath: /var/lib/cassandra
+      volumes:
+      - name: cassandra-data
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  ports:
+    - port: 9042
+      targetPort: 9042
+  selector:
+    app: cassandra
+  clusterIP: None  # Isso cria um serviço headless

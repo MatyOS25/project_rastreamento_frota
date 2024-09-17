@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class LocationService {
@@ -25,7 +26,8 @@ public class LocationService {
     @Value("${rabbitmq.exchange.name}")
     private String exchangeName;
 
-    private final Map<String, String> macToQueueMap = new HashMap<>();
+    private final Map<String, Long> lastQueueCheckMap = new ConcurrentHashMap<>();
+    private static final long QUEUE_CHECK_INTERVAL = 60000; // 1 minuto em milissegundos
 
     public LocationService(RabbitTemplate rabbitTemplate, RabbitAdmin rabbitAdmin, ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
@@ -46,18 +48,31 @@ public class LocationService {
     }
 
     private String getOrCreateQueue(String macAddress) {
-        return macToQueueMap.computeIfAbsent(macAddress, this::createQueue);
+        String queueName = "queue." + macAddress;
+        long currentTime = System.currentTimeMillis();
+        Long lastCheck = lastQueueCheckMap.get(macAddress);
+
+        if (lastCheck == null || currentTime - lastCheck > QUEUE_CHECK_INTERVAL) {
+            createQueueIfNotExists(queueName);
+            lastQueueCheckMap.put(macAddress, currentTime);
+        }
+
+        return queueName;
     }
 
-    private String createQueue(String macAddress) {
-        String queueName = "queue." + macAddress;
-        Map<String, Object> arguments = new HashMap<>();
-        arguments.put("x-expires", 300000); // 5 minutos em milissegundos
-        arguments.put("x-message-ttl", 300000); // 5 minutos em milissegundos
-        Queue queue = new Queue(queueName, true, false, false, arguments);
-        rabbitAdmin.declareQueue(queue);
-        logger.info("Fila criada para o MAC address: {} com expiração e TTL de 5 minutos", macAddress);
-        return queueName;
+    private void createQueueIfNotExists(String queueName) {
+        if (!queueExists(queueName)) {
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("x-expires", 300000); // 5 minutos em milissegundos
+            arguments.put("x-message-ttl", 300000); // 5 minutos em milissegundos
+            Queue queue = new Queue(queueName, false, false, true, arguments);
+            rabbitAdmin.declareQueue(queue);
+            logger.info("Fila temporária criada: {} com expiração e TTL de 5 minutos", queueName);
+        }
+    }
+
+    private boolean queueExists(String queueName) {
+        return rabbitAdmin.getQueueProperties(queueName) != null;
     }
 
     private Rastreio parseRastreio(String data) {
@@ -85,5 +100,13 @@ public class LocationService {
         } catch (Exception e) {
             logger.error("Erro ao enviar mensagem para RabbitMQ", e);
         }
+    }
+
+    // Método para criar fila durável com a placa do caminhão
+    public void createDurableQueueForPlaca(String placa) {
+        String queueName = placa;
+        Queue queue = new Queue(queueName, true, false, false);
+        rabbitAdmin.declareQueue(queue);
+        logger.info("Fila durável criada para a placa: {}", placa);
     }
 }

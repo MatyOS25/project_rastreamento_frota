@@ -1,15 +1,24 @@
 [
   {
     "Nome": "eureka-server",
+    "Tipo": "helm",
     "Chart": "./kubernetes/charts/eureka-server"
   },
   
   {
     "Nome": "api-gateway",
+    "Tipo": "helm",
     "Chart": "./kubernetes/charts/api-gateway"
   },
   {
+    "Nome": "cassandra",
+    "Tipo": "kubectl",
+    "Comando": "apply",
+    "Arquivo": "./kubernetes/charts/cassandra/cassandra-deployment.yaml"
+  },
+  {
     "Nome": "mongodb",
+    "Tipo": "helm",
     "Chart": "bitnami/mongodb",
     "Versao": "13.6.0",
     "ValoresPersonalizados": "./kubernetes/charts/mongodb/values.yaml",
@@ -17,6 +26,7 @@
   },
   {
     "Nome": "rabbitmq",
+    "Tipo": "helm",
     "Chart": "bitnami/rabbitmq",
     "Versao": "11.9.0",
     "ValoresPersonalizados": "./kubernetes/charts/rabbitmq/values.yaml",
@@ -24,10 +34,12 @@
   },
   {
     "Nome": "servico-localizacao",
+    "Tipo": "helm",
     "Chart": "./kubernetes/charts/servico-localizacao"
   },
   {
     "Nome": "servico-gerenciador-consumidor",
+    "Tipo": "helm",
     "Chart": "./kubernetes/charts/servico-gerenciador-consumidor"
   }  
   

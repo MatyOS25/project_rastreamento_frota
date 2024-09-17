@@ -67,6 +67,10 @@
 			<version>1.3.2</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-cassandra</artifactId>
+		</dependency>
 
 	</dependencies>
 	<dependencyManagement>

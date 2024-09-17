@@ -4,6 +4,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,17 +25,12 @@ public class RabbitMQConfig {
 
     @Bean
     public String outputQueueName() {
-        return placa;
-    }
-
-    @Bean
-    public Queue inputQueue() {
-        return new Queue(inputQueueName(), false);
+        return "caminhao." + placa;
     }
 
     @Bean
     public Queue outputQueue() {
-        return new Queue(outputQueueName(), true);
+        return new Queue(outputQueueName(), true, false, false);
     }
 
     @Bean
@@ -45,5 +41,14 @@ public class RabbitMQConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         return new RabbitTemplate(connectionFactory);
+    }
+
+    @Bean
+    public SimpleMessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(inputQueueName());
+        container.setMissingQueuesFatal(false);
+        return container;
     }
 }
