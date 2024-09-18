@@ -4,6 +4,10 @@
 
 Este projeto implementa um sistema de rastreamento de frota utilizando uma arquitetura de microserviços. O sistema recebe dados de localização dos veículos via UDP e processa essas informações para fornecer insights sobre a frota.
 
+## PASTA docs
+
+Diagramas
+
 ## Arquitetura
 
 O sistema é composto pelos seguintes serviços principais:
