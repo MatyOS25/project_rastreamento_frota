@@ -63,11 +63,7 @@ O sistema é composto pelos seguintes serviços principais:
    ```bash
    kubectl get pods
    ```
-
-### Implantação em Ambiente de Produção
-
-Para ambientes de produção, ajuste os valores nos arquivos `values.yaml` de cada chart e siga um processo similar ao da implantação local, mas apontando para o cluster Kubernetes de produção.
-
+   
 ## Serviços
 
 ### Serviço de Localização
