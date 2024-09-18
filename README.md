@@ -55,13 +55,11 @@ O sistema é composto pelos seguintes serviços principais:
 
 1. Certifique-se de que o Docker Desktop está rodando com Kubernetes habilitado.
 2. Clone o repositório do projeto.
-3. Navegue até a pasta `kubernetes/charts`.
-4. Para cada serviço, execute:
-   ```bash
-   helm upgrade --install [nome-do-release] ./[nome-do-chart]
-   ```
-   Exemplo: `helm upgrade --install servico-localizacao ./servico-localizacao`
-5. Verifique se os pods estão rodando:
+3. Possuir kubernetes-helm (choco install kubernetes-helm)
+4. Na pasta scripts rode o build_and_dockerize.ps1 passando o nome de cada servico, rodar um por vez:
+      api-gateway, eureka-server, servico-consumidor-para-caminhao, servico-gerenciador-consumidor, servico-localizacao
+5. Rodar o script que esta na pasta principal: deploy_with_helm.ps1
+6. Verifique se os pods estão rodando:
    ```bash
    kubectl get pods
    ```
