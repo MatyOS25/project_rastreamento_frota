@@ -17,7 +17,7 @@ public class GatewayConfig {
         return builder.routes()
             .route("eureka-server", r -> r
                 .path("/eureka/**")
-                .uri(eurekaServerUrl))
+                .uri("http://eureka-server:8761"))
             .route("veiculo-service", r -> r
                 .path("/veiculos/**")
                 .uri("lb://veiculo-service"))
@@ -29,7 +29,7 @@ public class GatewayConfig {
                 .uri("lb://consumidor-caminhao"))
             .route("gerenciador-consumidor-service", r -> r
                 .path("/gerenciador-consumidores/**")
-                .uri("lb://servico-gerenciador-consumidor"))
+                .uri("lb://servicogerenciadoconsumidor"))
             .build();
     }
 
